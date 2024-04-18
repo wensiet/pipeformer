@@ -20,18 +20,18 @@ test-on-code-change:
 
 validate-compute-configuration:
   stage: compute
-  <<: *compute_changes_rule
+  extends: *compute_changes_rule
   script:
     - echo "Ded, validate compute configuration"
 
 create-compute-instance:
   stage: compute
-  <<: *compute_changes_rule
+  extends: *compute_changes_rule
   script:
     - echo "Ded, create compute instance"
 
 apply-compute-post-scripts:
   stage: compute
-  <<: *compute_changes_rule
+  extends: *compute_changes_rule
   script:
     - echo "Ded, apply compute post scripts"
