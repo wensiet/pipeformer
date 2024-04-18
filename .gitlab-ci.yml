@@ -1,5 +1,11 @@
 stages:
   - test
+  - compute
+
+compute_changes_rule: &compute_changes_rule
+  only:
+    changes:
+      - compute/*
 
 test-on-code-change:
   stage: test
@@ -10,3 +16,22 @@ test-on-code-change:
       - "poetry.lock"
   script:
     - echo "Barada, implement tests"
+
+
+validate-compute-configuration:
+  stage: compute
+  <<: *compute_changes_rule
+  script:
+    - echo "Ded, validate compute configuration"
+
+create-compute-instance:
+  stage: compute
+  <<: *compute_changes_rule
+  script:
+    - echo "Ded, create compute instance"
+
+apply-compute-post-scripts:
+  stage: compute
+  <<: *compute_changes_rule
+  script:
+    - echo "Ded, apply compute post scripts"
