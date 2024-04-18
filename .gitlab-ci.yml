@@ -1,7 +1,8 @@
 stages:
-  - test-on-code-change
+  - test
 
 test-on-code-change:
+  stage: test
   only:
     changes:
       - "**/*.py"
