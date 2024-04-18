@@ -2,36 +2,37 @@ stages:
   - test
   - compute
 
-compute_changes_rule: &compute_changes_rule
-  only:
-    changes:
-      - compute/*
-
 test-on-code-change:
   stage: test
   only:
     changes:
-      - "**/*.py"
-      - "pyproject.toml"
-      - "poetry.lock"
+      - src/*
+      - pyproject.toml
+      - poetry.lock
   script:
     - echo "Barada, implement tests"
 
 
 validate-compute-configuration:
   stage: compute
-  extends: *compute_changes_rule
+  only:
+    changes:
+      - compute/*
   script:
     - echo "Ded, validate compute configuration"
 
 create-compute-instance:
   stage: compute
-  extends: *compute_changes_rule
+  only:
+    changes:
+      - compute/*
   script:
     - echo "Ded, create compute instance"
 
 apply-compute-post-scripts:
   stage: compute
-  extends: *compute_changes_rule
+  only:
+    changes:
+      - compute/*
   script:
     - echo "Ded, apply compute post scripts"
