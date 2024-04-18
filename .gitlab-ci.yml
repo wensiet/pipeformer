@@ -1,0 +1,11 @@
+stages:
+  - test-on-code-change
+
+test-on-code-change:
+  only:
+    changes:
+      - "**/*.py"
+      - "pyproject.toml"
+      - "poetry.lock"
+  script:
+    - echo "Barada, implement tests"
