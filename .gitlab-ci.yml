@@ -6,7 +6,7 @@ test-on-code-change:
   stage: test
   only:
     changes:
-      - src/*
+      - src/**/*
       - pyproject.toml
       - poetry.lock
   script:
@@ -17,7 +17,7 @@ validate-compute-configuration:
   stage: compute
   only:
     changes:
-      - compute/*
+      - compute/**/*
   script:
     - echo "Ded, validate compute configuration"
 
@@ -25,7 +25,7 @@ create-compute-instance:
   stage: compute
   only:
     changes:
-      - compute/*
+      - compute/**/*
   script:
     - echo "Ded, create compute instance"
 
@@ -33,6 +33,6 @@ apply-compute-post-scripts:
   stage: compute
   only:
     changes:
-      - compute/*
+      - compute/**/*
   script:
     - echo "Ded, apply compute post scripts"
