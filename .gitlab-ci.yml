@@ -1,8 +1,6 @@
 stages:
   - test
-  - validate-compute
-  - create-compute
-  - post-compute
+  - compute
 
 test-on-code-change:
   stage: test
@@ -16,7 +14,7 @@ test-on-code-change:
 
 
 validate-compute-configuration:
-  stage: validate-compute
+  stage: compute
   only:
     changes:
       - compute/**/*
@@ -24,17 +22,21 @@ validate-compute-configuration:
     - echo "Ded, validate compute configuration"
 
 create-compute-instance:
-  stage: create-compute
+  stage: compute
   only:
     changes:
       - compute/**/*
   script:
     - echo "Ded, create compute instance"
+  needs:
+    - validate-compute-configuration
 
 apply-compute-post-scripts:
-  stage: post-compute
+  stage: compute
   only:
     changes:
       - compute/**/*
   script:
     - echo "Ded, apply compute post scripts"
+  needs:
+    - create-compute-instance
