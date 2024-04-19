@@ -1,4 +1,4 @@
-# TODO Ded, Dasha come up with .yaml conf structure
+# TODO Ded, Dasha come up with .yaml config structure
 name: awesome-compute
 os: ubuntu_20_04
 preset: c1r1d15
