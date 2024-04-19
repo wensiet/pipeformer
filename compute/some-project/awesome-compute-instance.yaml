@@ -1,1 +1,5 @@
 # TODO Ded, Dasha come up with .yaml config structure
+name: awesome-compute
+os: ubuntu_20_04
+preset: c1r1d15
+ssh_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPhq/C7s6A07iJ8LGowgFCYujAtL+vF/Yhp95hnaV2oJ wensietyt@gmail.com
