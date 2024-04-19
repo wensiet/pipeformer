@@ -32,14 +32,16 @@ logging.info("Custom scripts execution finished!")
 
 ipv4 = None
 for network in compute.networks:
-    if network.type == "ipv4":
-        ipv4 = network
-        break
+    for ip in network.ips:
+        if ip.type == "ipv4":
+            ipv4 = ip
+            break
+
 logging.info("Provisioning finished, your SSH key may be not available yet.")
 logging.info(f" ----- Compute data ----- ")
 logging.info(f" - Name: {compute.name}")
 logging.info(f" - OS: {compute.os.name}")
 logging.info(f" - CPU: {compute.cpu}")
 logging.info(f" - RAM: {compute.ram}")
-logging.info(f" - IP: {ipv4.ips[0]}")
+logging.info(f" - IP: {ipv4.ip}")
 logging.info(f" ------------------------ ")
