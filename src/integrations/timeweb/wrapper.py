@@ -51,3 +51,10 @@ class TimewebWrapper:
         response.raise_for_status()
 
         return Compute.parse_obj(response.json()["server"])
+
+    def delete_compute(self, compute_id: int):
+        response = self._client.delete(
+            url=f"{self._endpoint}/v1/servers/{compute_id}",
+            headers={"Authorization": f"Bearer {self._token}"},
+        )
+        response.raise_for_status()

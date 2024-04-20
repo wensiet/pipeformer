@@ -1,9 +1,15 @@
-# 18 April 2024
+# 20 April 2024
 ## Iskander Shamsutdinov
-- Set up architecture
-- Configured basic CI pipeline
+- Added logic for compute creation/deletion
+
 
 # 19 April 2024
 ## Iskander Shamsutdinov
 - Implemented basic logic for compute creation
 - Added CI variable to mask api token
+
+
+# 18 April 2024
+## Iskander Shamsutdinov
+- Set up architecture
+- Configured basic CI pipeline
