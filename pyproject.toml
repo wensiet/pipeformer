@@ -13,6 +13,8 @@ pyyaml = "^6.0.1"
 click = "^8.1.7"
 sentry-sdk = "^2.0.1"
 
+[tool.poetry.config]
+virtualenvs.create = false
 
 [build-system]
 requires = ["poetry-core"]
