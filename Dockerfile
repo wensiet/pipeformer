@@ -8,4 +8,4 @@ RUN pip install --upgrade pip
 RUN pip install poetry
 RUN poetry install -v
 
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["/usr/bin/sh"]
