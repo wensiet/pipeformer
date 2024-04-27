@@ -4,6 +4,7 @@ import time
 from src.integrations.timeweb.wrapper import TimewebWrapper
 from src.services.provision.dto import ProvisionConfig
 from src.services.validation.dto import Flavor
+from src.services.validation.service import ValidationService
 from src.settings import AppSettings
 
 
@@ -22,13 +23,16 @@ class ProvisionService:
         res = res.rstrip("-")
         return res
 
-    def provision(self, config, change_type, file_name):
+    def provision(self, change_type, file_name):
         uniq = self._extract_compute_name(file_name)
-        provision_config = ProvisionConfig(**config.dict(), name=uniq)
         if change_type == "D":
-            self._delete_compute(provision_config)
+            self._delete_compute(uniq)
         elif change_type == "A":
-            self._create_compute(provision_config)
+            with open(file_name, 'r') as file:
+                file_data = file.read()
+                config = ValidationService().get_config_from(file_data)
+                provision_config = ProvisionConfig(**config.dict(), name=uniq)
+                self._create_compute(provision_config)
         else:
             raise ValueError(f"Git change {change_type} is not supported currently.")
 
@@ -77,8 +81,8 @@ class ProvisionService:
                 return compute.id
         raise ValueError(f"Compute with name {uniq} not found")
 
-    def _delete_compute(self, config: ProvisionConfig):
-        compute_id = self._get_id_by_uniq(config.name)
+    def _delete_compute(self, uniq: str):
+        compute_id = self._get_id_by_uniq(uniq)
         logging.info(f"Deleting compute with id: {compute_id}")
         self.timeweb.delete_compute(compute_id)
         logging.info(f"Compute with id: {compute_id} deleted")

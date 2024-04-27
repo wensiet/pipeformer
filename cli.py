@@ -34,10 +34,7 @@ def validate(file_name, change_type):
 @click.option('--change-type', '-c', type=click.Choice(['A', 'D', 'M', 'R']),
               help='Type of change to apply to the file content: uppercase or lowercase. Default is uppercase.')
 def provision(file_name, change_type):
-    with open(file_name, 'r') as file:
-        file_data = file.read()
-        config = validation.get_config_from(file_data)
-    provisioner.provision(config, change_type, file_name)
+    provisioner.provision(file_name, change_type)
 
 
 if __name__ == "__main__":
