@@ -50,12 +50,9 @@ provision-compute-instance:
     refs:
       - main
   before_script:
-    - pip install --upgrade pip
-    - pip install poetry
-    - poetry install -v
     - source ./find_changed_config.sh
   script:
-    - poetry run python cli.py provision -f $file_name -c $change_type
+    - python cli.py provision -f $file_name -c $change_type
 
 apply-compute-post-scripts:
   image: python:3.12
