@@ -41,6 +41,8 @@ create-compute-instance:
   only:
     changes:
       - compute/**/*
+    refs:
+      - main
   script:
     - poetry run python cli.py provision -f $file_name -c $change_type
 
@@ -50,5 +52,7 @@ apply-compute-post-scripts:
   only:
     changes:
       - compute/**/*
+    refs:
+      - main
   script:
     - echo "Ded, apply compute post scripts"
