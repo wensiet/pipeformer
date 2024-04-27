@@ -42,7 +42,7 @@ validate-compute-configuration:
 
 
 provision-compute-instance:
-  image: python:3.12
+  image: $IMAGE_NAME:latest
   stage: provision
   only:
     changes:
