@@ -1,0 +1,14 @@
+ssh: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPhq/C7s6A07iJ8LGowgFCYujAtL+vF/Yhp95hnaV2oJ wensietyt@gmail.com
+flavor:
+  operating_system: ubuntu_22_04
+  disk_space: 15GB
+  cpu_cores: 1
+  RAM: 1GB
+  region: SPB-1
+playbooks:
+  - name: playbook1
+    link: https://google.com
+    vars: [ ]
+  - name: playbook2
+    link: https://google.com
+    vars: [ ]
