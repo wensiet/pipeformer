@@ -23,7 +23,7 @@ class ProvisionService:
         res = res.rstrip("-")
         return res
 
-    def provision(self, change_type, file_name):
+    def provision(self, file_name, change_type):
         uniq = self._extract_compute_name(file_name)
         if change_type == "D":
             self._delete_compute(uniq)
