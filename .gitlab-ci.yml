@@ -38,7 +38,7 @@ validate-compute-configuration:
   before_script:
     - source ./find_changed_config.sh
   script:
-    - validate -f $file_name -c $change_type
+    - poetry run python cli.py validate -f $file_name -c $change_type
 
 
 provision-compute-instance:
