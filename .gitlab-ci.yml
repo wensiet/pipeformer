@@ -1,6 +1,8 @@
 stages:
   - test
-  - compute
+  - validate-config
+  - create-compute
+  - post-scripts
 
 test-on-code-change:
   stage: test
@@ -13,37 +15,40 @@ test-on-code-change:
     - echo "Barada, implement tests"
 
 
-validate-compute-configuration:
-  stage: compute
-  only:
-    changes:
-      - compute/**/*
+.deps-load:
   image: python:3.12
   before_script:
     - pip install --upgrade pip
     - pip install poetry
     - poetry install -v
+
+
+validate-compute-configuration:
+  extends: .deps-load
+  stage: validate-config
+  only:
+    changes:
+      - compute/**/*
+  before_script:
+    - source ./find_changed_config.sh
   script:
-    - poetry install
-    - poetry run python -m src
+    - poetry run python cli.py validate -f $file_name -c $change_type
 
 
 create-compute-instance:
-  stage: compute
+  extends: .deps-load
+  stage: create-compute
   only:
     changes:
       - compute/**/*
   script:
-    - echo "Ded, create compute instance"
-  needs:
-    - validate-compute-configuration
+    - poetry run python -m src
 
 apply-compute-post-scripts:
-  stage: compute
+  extends: .deps-load
+  stage: post-scripts
   only:
     changes:
       - compute/**/*
   script:
     - echo "Ded, apply compute post scripts"
-  needs:
-    - create-compute-instance

@@ -1,4 +1,14 @@
-name: awesome-compute
-os: ubuntu_20_04
-preset: c1r1d15
-ssh_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPhq/C7s6A07iJ8LGowgFCYujAtL+vF/Yhp95hnaV2oJ wensietyt@gmail.com
+ssh: key
+flavor:
+    operating_system: linux
+    disk_space: 50GB
+    cpu_cores: 2
+    RAM: 4GB
+    region: AMS-1
+playbooks:
+    - name: playbook1
+      link: http://google.com
+      vars: []
+    - name: playbook2
+      link: http://google.com
+      vars: [ ]
