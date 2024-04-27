@@ -4,6 +4,7 @@ import paramiko
 
 from src.integrations.timeweb.wrapper import TimewebWrapper
 from src.services.provision.dto import ProvisionConfig
+from src.services.utils import extract_compute_name, get_id_by_uniq
 from src.services.validation.dto import Flavor
 from src.services.validation.service import ValidationService
 from src.settings import AppSettings
@@ -13,19 +14,8 @@ class ProvisionService:
     def __init__(self):
         self.timeweb = TimewebWrapper()
 
-    @staticmethod
-    def _extract_compute_name(path: str):
-        paths = path.replace(".yaml", "").replace(".yml", "").split("/")
-        if "compute" in paths:
-            paths.remove("compute")
-        res = ""
-        for p in paths:
-            res += p + "-"
-        res = res.rstrip("-")
-        return res
-
     def provision(self, file_name, change_type):
-        uniq = self._extract_compute_name(file_name)
+        uniq = extract_compute_name(file_name)
         if change_type == "D":
             self._delete_compute(uniq)
         elif change_type == "A":
@@ -85,12 +75,7 @@ class ProvisionService:
 
         logging.info("Provisioning finished, adding SSH keys")
 
-        ipv4 = None
-        for network in compute.networks:
-            for ip in network.ips:
-                if ip.type == "ipv4":
-                    ipv4 = ip
-                    break
+        ipv4 = compute.extract_ipv4()
 
         time.sleep(15)
 
@@ -105,15 +90,8 @@ class ProvisionService:
         logging.info("|{:<25} {:<25}|".format("IP:", ipv4.ip))
         logging.info("+" + "-" * 55 + "+")
 
-    def _get_id_by_uniq(self, uniq: str):
-        computes = self.timeweb.list_computes()
-        for compute in computes:
-            if compute.name == uniq:
-                return compute.id
-        raise ValueError(f"Compute with name {uniq} not found")
-
     def _delete_compute(self, uniq: str):
-        compute_id = self._get_id_by_uniq(uniq)
+        compute_id = get_id_by_uniq(self.timeweb, uniq)
         logging.info(f"Deleting compute with id: {compute_id}")
         self.timeweb.delete_compute(compute_id)
         logging.info(f"Compute with id: {compute_id} deleted")

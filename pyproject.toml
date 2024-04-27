@@ -13,6 +13,7 @@ pyyaml = "^6.0.1"
 click = "^8.1.7"
 sentry-sdk = "^2.0.1"
 paramiko = "^3.4.0"
+ansible = "^9.5.1"
 
 [build-system]
 requires = ["poetry-core"]

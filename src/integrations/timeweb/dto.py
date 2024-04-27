@@ -124,3 +124,10 @@ class Compute(BaseModel):
     root_pass: Optional[str]
     cloud_init: Optional[str]
     is_qemu_agent: bool
+
+    def extract_ipv4(self):
+        for network in self.networks:
+            for ip in network.ips:
+                if ip.type == "ipv4":
+                    return ip
+        raise ValueError("No IPv4 found")

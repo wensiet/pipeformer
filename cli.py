@@ -3,12 +3,14 @@ import logging
 import sentry_sdk
 
 from src import settings
+from src.services.configuration.service import ConfigurationService
 from src.services.provision.service import ProvisionService
 from src.services.validation.service import ValidationService
 import click
 
 validation = ValidationService()
 provisioner = ProvisionService()
+configuration = ConfigurationService()
 
 
 @click.group()
@@ -18,8 +20,7 @@ def cli():
 
 @cli.command(name='validate')
 @click.option('--file-name', '-f', help='Name of the file to process.')
-@click.option('--change-type', '-c', type=click.Choice(['A', 'D', 'M', 'R']),
-              help='Type of change to apply to the file content: uppercase or lowercase. Default is uppercase.')
+@click.option('--change-type', '-c', type=click.Choice(['A', 'D', 'M', 'R']))
 def validate(file_name, change_type):
     if change_type == 'D':
         return
@@ -31,10 +32,16 @@ def validate(file_name, change_type):
 
 @cli.command(name='provision')
 @click.option('--file-name', '-f', help='Name of the file to process.')
-@click.option('--change-type', '-c', type=click.Choice(['A', 'D', 'M', 'R']),
-              help='Type of change to apply to the file content: uppercase or lowercase. Default is uppercase.')
+@click.option('--change-type', '-c', type=click.Choice(['A', 'D', 'M', 'R']))
 def provision(file_name, change_type):
     provisioner.provision(file_name, change_type)
+
+
+@cli.command(name='playbooks')
+@click.option('--file-name', '-f', help='Name of the file to process.')
+@click.option('--change-type', '-c', type=click.Choice(['A', 'D', 'M', 'R']))
+def playbooks(file_name, change_type):
+    configuration.run_post_scripts(file_name, change_type)
 
 
 if __name__ == "__main__":
