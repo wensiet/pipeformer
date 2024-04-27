@@ -42,7 +42,7 @@ create-compute-instance:
     changes:
       - compute/**/*
   script:
-    - poetry run python -m src
+    - poetry run python cli.py provision -f $file_name -c $change_type
 
 apply-compute-post-scripts:
   extends: .deps-load
