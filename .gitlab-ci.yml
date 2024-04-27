@@ -67,4 +67,4 @@ apply-compute-post-scripts:
     - mkdir -p .ssh
     - echo "$SSH_SERVICE" > .ssh/service
   script:
-    - python cli.py provision -f $file_name -c $change_type
+    - python cli.py playbooks -f $file_name -c $change_type
