@@ -19,7 +19,7 @@ class PlaybookRunnable(BaseModel):
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 
         for line in iter(process.stdout.readline, ''):
-            print(line.strip())
+            logging.info(line.strip())
 
         process.wait()
 
@@ -27,4 +27,4 @@ class PlaybookRunnable(BaseModel):
             logging.info(f"Playbook '{self.initial.name}' executed successful!")
         else:
             logging.error(f"Playbook '{self.initial.name}' has failed!")
-            logging.error("STDERR:\n", process.stderr.read())
+            print("STDERR:\n", process.stderr.read())
