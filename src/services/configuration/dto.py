@@ -12,10 +12,9 @@ class PlaybookRunnable(BaseModel):
 
     def run(self, inv_file: str = "inventory.ini"):
         command = [
-            'ansible-playbook',
-            self.file_name,
-            '-i',
-            inv_file
+            'ansible-playbook', self.file_name,
+            '-i', inv_file,
+            '--private-key', '~/.ssh/id_rsa'
         ]
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 
@@ -29,4 +28,3 @@ class PlaybookRunnable(BaseModel):
         else:
             logging.error(f"Playbook '{self.initial.name}' has failed!")
             logging.error("STDERR:\n", process.stderr.read())
-
