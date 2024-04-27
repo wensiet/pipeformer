@@ -57,7 +57,14 @@ class ProvisionService:
             logging.info(f"Compute status: {compute.status}")
             time.sleep(15)
 
-        logging.info("Provisioning finished, your SSH key may be not available yet.")
+        logging.info("Provisioning finished, adding SSH keys")
+
+        self.timeweb.add_ssh_key(compute.id, user_key)
+        self.timeweb.add_ssh_key(compute.id, service_key)
+
+        logging.info("SSH keys added, but it takes some time to load them")
+
+        time.sleep(10)
 
         ipv4 = None
         for network in compute.networks:

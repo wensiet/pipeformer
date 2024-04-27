@@ -68,3 +68,11 @@ class TimewebWrapper:
         response.raise_for_status()
 
         return [Compute.parse_obj(server) for server in response.json()["servers"]]
+
+    def add_ssh_key(self, compute_id: int, ssh_key_id: int):
+        response = self._client.post(
+            url=f"{self._endpoint}/v1/servers/{compute_id}/ssh-keys",
+            headers={"Authorization": f"Bearer {self._token}"},
+            json={"ssh_key_id": ssh_key_id}
+        )
+        response.raise_for_status()
