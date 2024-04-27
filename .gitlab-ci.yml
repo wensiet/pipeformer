@@ -55,12 +55,15 @@ provision-compute-instance:
     - python cli.py provision -f $file_name -c $change_type
 
 apply-compute-post-scripts:
-  image: python:3.12
+  image: $IMAGE_NAME:latest
   stage: post-scripts
   only:
     changes:
       - compute/**/*
     refs:
       - main
+  before_script:
+    - source ./find_changed_config.sh
+    - echo "$SSH_SERVICE" > .ssh/service
   script:
-    - echo "Ded, apply compute post scripts"
+    - python cli.py provision -f $file_name -c $change_type
