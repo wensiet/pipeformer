@@ -15,39 +15,36 @@ test-on-code-change:
     - echo "Barada, implement tests"
 
 
-.deps-load:
-  image: python:3.12
-  script:
-    - pip install --upgrade pip
-    - pip install poetry
-    - poetry install -v
-
-
 validate-compute-configuration:
-  extends: .deps-load
   stage: validate-config
   only:
     changes:
       - compute/**/*
   before_script:
+    - pip install --upgrade pip
+    - pip install poetry
+    - poetry install -v
     - source ./find_changed_config.sh
   script:
     - poetry run python cli.py validate -f $file_name -c $change_type
 
 
 create-compute-instance:
-  extends: .deps-load
   stage: create-compute
   only:
     changes:
       - compute/**/*
     refs:
       - main
+  before_script:
+    - pip install --upgrade pip
+    - pip install poetry
+    - poetry install -v
+    - source ./find_changed_config.sh
   script:
     - poetry run python cli.py provision -f $file_name -c $change_type
 
 apply-compute-post-scripts:
-  extends: .deps-load
   stage: post-scripts
   only:
     changes:
