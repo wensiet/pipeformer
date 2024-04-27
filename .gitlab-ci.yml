@@ -13,6 +13,7 @@ build-abc:
   script:
     - mkdir -p ~/.ssh
     - echo "$SSH_SERVICE" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
     - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa 109.68.214.20 "echo 'Hello, world!'"
     - exit 1
 
