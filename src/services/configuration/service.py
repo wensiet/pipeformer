@@ -71,7 +71,8 @@ class ConfigurationService:
 
         logging.info("Creating inventory file")
         with open("inventory.ini", 'w') as file:
-            file.write(f"[servers]\n{compute_ipv4.ip} ansible_user=root")
+            file.write(f"[servers]\n{compute_ipv4.ip} ansible_user=root "
+                       f"ansible_ssh_common_args='-o StrictHostKeyChecking=no'")
 
         playbooks = self._save_playbooks(config)
 
