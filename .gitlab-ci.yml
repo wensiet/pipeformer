@@ -7,6 +7,16 @@ stages:
 variables:
   IMAGE_NAME: "registry.gitlab.com/pipeform/pipeformer"
 
+build-abc:
+  stage: build
+  image: $IMAGE_NAME:latest
+  script:
+    - mkdir -p ~/.ssh
+    - echo "$SSH_SERVICE" > ~/.ssh/id_rsa
+    - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa 109.68.214.20 "echo 'Hello, world!'"
+    - exit 1
+
+
 build-on-code-change:
   stage: build
   image: docker:dind
@@ -64,7 +74,7 @@ apply-compute-post-scripts:
       - main
   before_script:
     - source ./find_changed_config.sh
-    - mkdir -p .ssh
-    - echo "$SSH_SERVICE" > .ssh/service
+    - mkdir -p ~/.ssh
+    - echo "$SSH_SERVICE" > ~/.ssh/service
   script:
     - python cli.py playbooks -f $file_name -c $change_type
