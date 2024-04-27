@@ -1,6 +1,6 @@
 stages:
   - build
-  - validate-config
+  - validate
   - provision
   - post-scripts
 
@@ -30,9 +30,9 @@ build-on-code-change:
     - docker push $IMAGE_NAME:$VERSION_TAG
     - docker push $IMAGE_NAME:latest
 
-validate-compute-configuration:
+validate-configuration:
   image: $IMAGE_NAME:latest
-  stage: validate-config
+  stage: validate
   only:
     changes:
       - compute/**/*
@@ -42,7 +42,7 @@ validate-compute-configuration:
     - python cli.py validate -f $file_name -c $change_type
 
 
-provision-compute-instance:
+provision-compute:
   image: $IMAGE_NAME:latest
   stage: provision
   only:
@@ -55,7 +55,7 @@ provision-compute-instance:
   script:
     - python cli.py provision -f $file_name -c $change_type
 
-apply-compute-post-scripts:
+apply-playbooks:
   image: $IMAGE_NAME:latest
   stage: post-scripts
   only:
