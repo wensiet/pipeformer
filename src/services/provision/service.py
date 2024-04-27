@@ -1,6 +1,8 @@
 import logging
 import time
 
+import httpx
+
 from src.integrations.timeweb.wrapper import TimewebWrapper
 from src.services.provision.dto import ProvisionConfig
 from src.services.validation.dto import Flavor
@@ -59,8 +61,15 @@ class ProvisionService:
 
         logging.info("Provisioning finished, adding SSH keys")
 
-        self.timeweb.add_ssh_key(compute.id, user_key)
-        self.timeweb.add_ssh_key(compute.id, service_key)
+        try:
+            self.timeweb.add_ssh_key(compute.id, user_key)
+        except httpx.HTTPStatusError:
+            logging.warning("User key already added and pending")
+
+        try:
+            self.timeweb.add_ssh_key(compute.id, service_key)
+        except httpx.HTTPStatusError as e:
+            logging.warning("Service key already added and pending")
 
         logging.info("SSH keys added, but it takes some time to load them")
 
