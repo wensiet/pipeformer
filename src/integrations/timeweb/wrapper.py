@@ -38,6 +38,7 @@ class TimewebWrapper:
             url=f"{self._endpoint}/v1/servers",
             headers={"Authorization": f"Bearer {self._token}"},
             json=request.dict(exclude_unset=True),
+            timeout=60
         )
         response.raise_for_status()
 
@@ -58,3 +59,12 @@ class TimewebWrapper:
             headers={"Authorization": f"Bearer {self._token}"},
         )
         response.raise_for_status()
+
+    def list_computes(self):
+        response = self._client.get(
+            url=f"{self._endpoint}/v1/servers",
+            headers={"Authorization": f"Bearer {self._token}"},
+        )
+        response.raise_for_status()
+
+        return [Compute.parse_obj(server) for server in response.json()["servers"]]
