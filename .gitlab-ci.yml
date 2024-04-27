@@ -17,7 +17,7 @@ test-on-code-change:
 
 .deps-load:
   image: python:3.12
-  before_script:
+  script:
     - pip install --upgrade pip
     - pip install poetry
     - poetry install -v
