@@ -4,6 +4,9 @@ stages:
   - provision
   - post-scripts
 
+variables:
+  IMAGE_NAME: "registry.gitlab.com/pipeform/pipeformer"
+
 build-on-code-change:
   stage: build
   image: docker:dind
