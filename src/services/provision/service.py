@@ -1,7 +1,6 @@
 import logging
 import time
-
-import httpx
+import paramiko
 
 from src.integrations.timeweb.wrapper import TimewebWrapper
 from src.services.provision.dto import ProvisionConfig
@@ -44,13 +43,38 @@ class ProvisionService:
                       f"d{preset.disk_space.replace('GB', '')}")
         return preset_str
 
-    def _create_compute(self, config: ProvisionConfig, service_key: int = AppSettings.service_key_id):
-        logging.info(f"Initialized compute creation wiath name: {config.name}")
-        user_key = self.timeweb.create_ssh_key(f"compute-{config.name}", config.ssh)
-        logging.info(f"User-key created with id: {user_key}")
+    @staticmethod
+    def _load_new_ssh(server_address, ssh_username, ssh_password, new_keys):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+        try:
+            ssh.connect(server_address, username=ssh_username, password=ssh_password)
+
+            create_ssh_folder_command = "mkdir -p ~/.ssh"
+            ssh.exec_command(create_ssh_folder_command)
+
+            for new_key in new_keys:
+                command = f"echo '{new_key}' >> ~/.ssh/authorized_keys"
+                stdin, stdout, stderr = ssh.exec_command(command)
+
+                if stderr.channel.recv_exit_status() != 0:
+                    logging.error("Error occurred while adding public key to authorized_keys.")
+                else:
+                    logging.info("Public key added to authorized_keys successfully.")
+
+        except paramiko.AuthenticationException:
+            logging.error("Authentication failed. Please check your credentials.")
+        except paramiko.SSHException as e:
+            logging.error(f"SSH connection failed: {e}")
+
+        ssh.close()
+
+    def _create_compute(self, config: ProvisionConfig):
+        logging.info(f"Initialized compute creation with name: {config.name}")
         compute = self.timeweb.create_compute(config.name, self._map_preset(config.flavor),
                                               config.flavor.operating_system,
-                                              [user_key, service_key])
+                                              [])
         logging.info(f"Compute created with id: {compute.id}")
 
         logging.info(f"Waiting for compute to be ready...")
@@ -61,26 +85,17 @@ class ProvisionService:
 
         logging.info("Provisioning finished, adding SSH keys")
 
-        try:
-            self.timeweb.add_ssh_key(compute.id, user_key)
-        except httpx.HTTPStatusError:
-            logging.warning("User key already added and pending")
-
-        try:
-            self.timeweb.add_ssh_key(compute.id, service_key)
-        except httpx.HTTPStatusError as e:
-            logging.warning("Service key already added and pending")
-
-        logging.info("SSH keys added, but it takes some time to load them")
-
-        time.sleep(10)
-
         ipv4 = None
         for network in compute.networks:
             for ip in network.ips:
                 if ip.type == "ipv4":
                     ipv4 = ip
                     break
+
+        time.sleep(15)
+
+        self._load_new_ssh(ipv4.ip, "root", compute.root_pass, [config.ssh, AppSettings.service_key])
+        logging.info("SSH keys added")
 
         logging.info("+" + "-" * 22 + " Compute Data " + "-" * 22 + "+")
         logging.info("|{:<25} {:<25}|".format("Name:", compute.name))
