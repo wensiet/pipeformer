@@ -1,4 +1,5 @@
 import logging
+import subprocess
 import uuid
 
 import httpx
@@ -36,6 +37,24 @@ class ConfigurationService:
 
         return playbooks
 
+    @staticmethod
+    def _add_to_known_hosts(ip):
+        command = [
+            'ssh-keyscan', '-H', ip
+        ]
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+
+        for line in iter(process.stdout.readline, ''):
+            print(line.strip())
+
+        process.wait()
+
+        if process.returncode == 0:
+            logging.info(f"IP {ip} added to known_hosts")
+        else:
+            logging.error(f"Failed to add IP {ip} to known_hosts")
+            logging.error("STDERR:\n", process.stderr.read())
+
     def run_post_scripts(self, file_name, change_type):
         if change_type == 'D':
             logging.info("Chane type is delete, nothing to run")
@@ -56,6 +75,7 @@ class ConfigurationService:
 
         playbooks = self._save_playbooks(config)
 
+        self._add_to_known_hosts(compute_ipv4.ip)
         for pb in playbooks:
             logging.info(f"Executing '{pb.initial.name}' playbook")
             pb.run()
