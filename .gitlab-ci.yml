@@ -16,6 +16,7 @@ test-on-code-change:
 
 
 validate-compute-configuration:
+  image: python:3.12
   stage: validate-config
   only:
     changes:
@@ -30,6 +31,7 @@ validate-compute-configuration:
 
 
 create-compute-instance:
+  image: python:3.12
   stage: create-compute
   only:
     changes:
@@ -45,6 +47,7 @@ create-compute-instance:
     - poetry run python cli.py provision -f $file_name -c $change_type
 
 apply-compute-post-scripts:
+  image: python:3.12
   stage: post-scripts
   only:
     changes:
