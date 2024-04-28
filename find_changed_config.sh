@@ -2,8 +2,6 @@
 
 file_list=$(git diff-tree --no-commit-id --name-status -r $CI_COMMIT_SHA)
 
-filename=""
-
 words=($file_list)
 
 if [ "${#words[@]}" -ne 2 ]; then
