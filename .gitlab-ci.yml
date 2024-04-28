@@ -39,7 +39,7 @@ validate-configuration:
   before_script:
     - source ./find_changed_config.sh
   script:
-    - python cli.py validate -f $file_name -c $change_type
+    - python cli.py --old-sha $CI_COMMIT_BEFORE_SHA --new-sha $CI_COMMIT_SHA validate
 
 
 provision-compute:
@@ -53,7 +53,7 @@ provision-compute:
   before_script:
     - source ./find_changed_config.sh
   script:
-    - python cli.py provision -f $file_name -c $change_type
+    - python cli.py --old-sha $CI_COMMIT_BEFORE_SHA --new-sha $CI_COMMIT_SHA provision
 
 apply-playbooks:
   image: $IMAGE_NAME:latest
@@ -69,4 +69,4 @@ apply-playbooks:
     - echo "$SSH_SERVICE" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
   script:
-    - python cli.py playbooks -f $file_name -c $change_type
+    - python cli.py --old-sha $CI_COMMIT_BEFORE_SHA --new-sha $CI_COMMIT_SHA playbooks
