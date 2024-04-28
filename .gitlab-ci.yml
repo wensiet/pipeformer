@@ -37,6 +37,7 @@ validate-configuration:
     changes:
       - compute/**/*
   script:
+    - if [ "$CI_COMMIT_BEFORE_SHA" = "0000000000000000000000000000000000000000" ]; then CI_COMMIT_BEFORE_SHA="main"; fi
     - python cli.py --old-sha $CI_COMMIT_SHA --new-sha $CI_COMMIT_BEFORE_SHA validate
 
 
