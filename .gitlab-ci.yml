@@ -36,8 +36,6 @@ validate-configuration:
   only:
     changes:
       - compute/**/*
-  before_script:
-    - source ./find_changed_config.sh
   script:
     - python cli.py --old-sha $CI_COMMIT_BEFORE_SHA --new-sha $CI_COMMIT_SHA validate
 
@@ -50,8 +48,6 @@ provision-compute:
       - compute/**/*
     refs:
       - main
-  before_script:
-    - source ./find_changed_config.sh
   script:
     - python cli.py --old-sha $CI_COMMIT_BEFORE_SHA --new-sha $CI_COMMIT_SHA provision
 
@@ -64,7 +60,6 @@ apply-playbooks:
     refs:
       - main
   before_script:
-    - source ./find_changed_config.sh
     - mkdir -p ~/.ssh
     - echo "$SSH_SERVICE" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
