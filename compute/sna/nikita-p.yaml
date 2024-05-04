@@ -1,0 +1,8 @@
+ssh: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCUzMuiFjzJCF63B0JyAxcy6O//GQyIxPbGtFNL0WMvga5DoPAh+q1oMzPyCiuFZ50lMKt388PaffrUkARJ3yeFj8N5bMG/GsUfYuqeu9YoaqkcyTfpZyLM4/OApcWSpDGiUyb/oRGhLNEbmlYLDqabWhFRvIwS1GfVukVyD9/e0dn9rUZB3jQfR/0EVijQKa8udArjeTT0eAQo1lTjlSLplbcsz91ZRONPgrs/eO7pw8H7tN6wNeZhh+73zgy8GApzk1e0BTJ0Dh2EOtFjIoCSwlcerp8ODFSMsZKdf9GzD7E6WujtnnBnZNA5vcr/fZiWc6E/vmBzdjkbqqOGCIhS6cFCZFiimeizEE5bGAhnwgClvAi3QZ0wawPfOnr6mfhMjvaku8K17nDtIWb24RtiBA1RcuR/DZ95Z/sOo+2V3RBB2Z5rOm0qekF/No96G2+pDvBekUGLvfPsKmdL0rAGm9G8V/OS8e+U4tRdGCzNm9VymCFIccfrRCdNY9H13Mk= kali@kali
+flavor:
+  operating_system: ubuntu_22_04
+  disk_space: 15GB
+  cpu_cores: 1
+  RAM: 1GB
+  region: SPB-1
+playbooks: [ ]
