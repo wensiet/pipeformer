@@ -5,16 +5,17 @@ import paramiko
 from src.integrations.timeweb.wrapper import TimewebWrapper
 from src.integrations.zabbix.wrapper import ZabbixWrapper
 from src.services.provision.dto import ProvisionConfig
-from src.services.utils import extract_compute_name, get_id_by_uniq
+from src.services.utils import extract_compute_name, get_id_by_uniq, url_encode
 from src.services.validation.dto import Flavor
 from src.services.validation.service import ValidationService
-from src.settings import AppSettings
+from src.settings import AppSettings, GrafanaSettings
 
 
 class ProvisionService:
     def __init__(self):
         self.timeweb = TimewebWrapper()
         self.zabbix = ZabbixWrapper()
+        self.grafana_settings = GrafanaSettings()
 
     def provision(self, file_name, change_type):
         uniq = extract_compute_name(file_name)
@@ -113,12 +114,19 @@ class ProvisionService:
         self.zabbix.connect_host(ipv4.ip, compute.name)
         logging.info("Metrics scraping configured")
 
+        grafana_dashboard_link = (f"{self.grafana_settings.host}/d/"
+                                  f"{self.grafana_settings.folder_uid}/"
+                                  f"{self.grafana_settings.base_dashboard}?"
+                                  f"orgId=1&var-Group={url_encode(self.grafana_settings.zabbix_group)}"
+                                  f"&var-Host={compute.name}")
+
         logging.info("+" + "-" * 22 + " Compute Data " + "-" * 22 + "+")
         logging.info("|{:<25} {:<25}|".format("Name:", compute.name))
         logging.info("|{:<25} {:<25}|".format("OS:", compute.os.name))
         logging.info("|{:<25} {:<25}|".format("CPU:", compute.cpu))
         logging.info("|{:<25} {:<25}|".format("RAM:", compute.ram))
         logging.info("|{:<25} {:<25}|".format("IP:", ipv4.ip))
+        logging.info("|{:<25} {:<25}|".format("Dashboard:", grafana_dashboard_link))
         logging.info("+" + "-" * 55 + "+")
 
     def _delete_compute(self, uniq: str):

@@ -1,3 +1,6 @@
+import urllib.parse
+
+
 def extract_compute_name(path: str):
     paths = path.replace(".yaml", "").replace(".yml", "").split("/")
     if "compute" in paths:
@@ -15,3 +18,8 @@ def get_id_by_uniq(timeweb, uniq: str):
         if compute.name == uniq:
             return compute.id
     raise ValueError(f"Compute with name {uniq} not found")
+
+
+def url_encode(data: str):
+    url_encoded = urllib.parse.quote(data)
+    return url_encoded
