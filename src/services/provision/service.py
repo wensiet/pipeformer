@@ -3,6 +3,7 @@ import time
 import paramiko
 
 from src.integrations.timeweb.wrapper import TimewebWrapper
+from src.integrations.zabbix.wrapper import ZabbixWrapper
 from src.services.provision.dto import ProvisionConfig
 from src.services.utils import extract_compute_name, get_id_by_uniq
 from src.services.validation.dto import Flavor
@@ -13,6 +14,7 @@ from src.settings import AppSettings
 class ProvisionService:
     def __init__(self):
         self.timeweb = TimewebWrapper()
+        self.zabbix = ZabbixWrapper()
 
     def provision(self, file_name, change_type):
         uniq = extract_compute_name(file_name)
@@ -60,6 +62,26 @@ class ProvisionService:
 
         ssh.close()
 
+    @staticmethod
+    def _add_zabbix_metrics(server_address, ssh_username, ssh_password):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+        try:
+            ssh.connect(server_address, username=ssh_username, password=ssh_password)
+
+            configure_command = ("wget -O - https://gist.githubusercontent.com"
+                                 "/wensiet/ad357c3fcbb2edd1dc236038c3faf109/raw/"
+                                 "30383a561a895696c019def559ce1adf0347f96d/connect_zabbix.sh | bash")
+            ssh.exec_command(configure_command)
+
+        except paramiko.AuthenticationException:
+            logging.error("Authentication failed. Please check your credentials.")
+        except paramiko.SSHException as e:
+            logging.error(f"SSH connection failed: {e}")
+
+        ssh.close()
+
     def _create_compute(self, config: ProvisionConfig):
         logging.info(f"Initialized compute creation with name: {config.name}")
         compute = self.timeweb.create_compute(config.name, self._map_preset(config.flavor),
@@ -80,7 +102,13 @@ class ProvisionService:
         time.sleep(15)
 
         self._load_new_ssh(ipv4.ip, "root", compute.root_pass, [config.ssh, AppSettings.service_key])
+
         logging.info("SSH keys added")
+
+        logging.info("Configuring metrics scraping")
+        self._add_zabbix_metrics(ipv4.ip, "root", compute.root_pass)
+        self.zabbix.connect_host(ipv4.ip, compute.name)
+        logging.info("Metrics scraping configured")
 
         logging.info("+" + "-" * 22 + " Compute Data " + "-" * 22 + "+")
         logging.info("|{:<25} {:<25}|".format("Name:", compute.name))
