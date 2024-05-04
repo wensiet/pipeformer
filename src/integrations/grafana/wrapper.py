@@ -58,6 +58,7 @@ class GrafanaWrapper:
         }
         response = self._client.request("PUT",
                                         f"{self.grafana_settings.host}/api/datasources/uid/adkp3t7dxa5mob",
+                                        headers={"Authorization": f"Bearer {self._token}"},
                                         json=request)
         response.raise_for_status()
 
