@@ -1,8 +1,0 @@
-ssh: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDG8th7ko+mAXVuWwa42llFm+KW1PuiuO5+IOkTYmWueh6EbGggJeBdOO05OiD9OI9AvumUcO/Ekqo5dPbvNTSWxdTekQ5JDJ1/S9/4Kts6kGLrm6ToGIllQABC04EAPYToDSAnhAyblywa+Ih9M8dbG0yzI83BbZ833ssyEDIRkxfvTG9XrXCdw8mqzPt7G3rxYjgMHrlcAZ3ekc7iibEkRsEqnZ04RybjQFP7U2a3qs7rRVGtv+PgdgdyMVxo4utYPFvsFfXEFFErReOMq1ZPOYmLq6hz1jSLdJhPhuibhG+PLl5Uhdr8KatnxgnqRMC4tG2rOcxQX+/iBynNAdRIlGzuINNA5QQjweMGl8oR7pXZaRNRNz6ULbGhX9M1R+nxV2nI37AUY6apAXZLnlF4KkK1m9+6npQvxmx0e926lWsUzNsFC3QcRR1DMODz01V5Bie3peoyLxO1a0FM/B/3yeBWftZaKyCH46oPSbkBLznRMjgH+guNmUMCJlWaHak= flake@MacBook-Air-Savelij.local
-flavor:
-  operating_system: ubuntu_22_04
-  disk_space: 15GB
-  cpu_cores: 1
-  RAM: 1GB
-  region: SPB-1
-playbooks: [ ]
