@@ -73,10 +73,11 @@ class ProvisionService:
             configure_command = ("wget -O - https://gist.githubusercontent.com"
                                  "/wensiet/ad357c3fcbb2edd1dc236038c3faf109/raw/"
                                  "30383a561a895696c019def559ce1adf0347f96d/connect_zabbix.sh | bash")
-            result = ssh.exec_command(configure_command)
-            logging.info(result[0])
-            if result[2]:
-                logging.error(result[2])
+            stdin, stdout, stderr = ssh.exec_command(configure_command)
+            if stderr.channel.recv_exit_status() != 0:
+                logging.error("Error occurred while adding zabbix metrics.")
+            else:
+                logging.info("Zabbix metrics reconfigured.")
         except paramiko.AuthenticationException:
             logging.error("Authentication failed. Please check your credentials.")
         except paramiko.SSHException as e:
