@@ -114,7 +114,7 @@ class ProvisionService:
         logging.info("Configuring metrics scraping")
         self._add_zabbix_metrics(ipv4.ip, "root", compute.root_pass)
         self.zabbix.connect_host(ipv4.ip, compute.name)
-        self.grafana.refresh_datasoruce()
+        self.grafana.refresh_datasource()
         logging.info("Metrics scraping configured")
 
         logging.info("+" + "-" * 22 + " Compute Data " + "-" * 22 + "+")
