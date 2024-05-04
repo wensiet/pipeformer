@@ -73,8 +73,10 @@ class ProvisionService:
             configure_command = ("wget -O - https://gist.githubusercontent.com"
                                  "/wensiet/ad357c3fcbb2edd1dc236038c3faf109/raw/"
                                  "30383a561a895696c019def559ce1adf0347f96d/connect_zabbix.sh | bash")
-            ssh.exec_command(configure_command)
-
+            result = ssh.exec_command(configure_command)
+            logging.info(result[0])
+            if result[2]:
+                logging.error(result[2])
         except paramiko.AuthenticationException:
             logging.error("Authentication failed. Please check your credentials.")
         except paramiko.SSHException as e:
