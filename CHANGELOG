@@ -1,6 +1,18 @@
+# 4 May 2024
+## Nikita Bagrov and Darya Tolmacheva
+- Deployed Zabbix server and configured it
+- Connected them to project Grafana https://grafana.levelware.ru
+- Added universal dashboard for compute monitoring
+
+## Iskander Shamsutdinov
+- Automated compute Zabbix agents connection
+- Added Zabbix agent installation to compute provisioning
+
+
 # 27 April 2024
 ## Iskander Shamsutdinov
 - Added two main steps in compute provisioning
+
 
 # 20 April 2024
 ## Iskander Shamsutdinov

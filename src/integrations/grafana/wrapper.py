@@ -13,7 +13,7 @@ class GrafanaWrapper:
         self._token = os.getenv("GRAFANA_API_TOKEN")
         self._client = httpx.Client()
 
-    def refresh_datasoruce(self):
+    def refresh_datasource(self):
         request = {
             "id": 8,
             "uid": "adkp3t7dxa5mob",
