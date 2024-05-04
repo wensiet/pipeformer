@@ -9,7 +9,7 @@ class ProvisionerSettings:
 class GrafanaSettings:
     host: str = os.getenv("GRAFANA_HOST", "https://grafana.levelware.ru").rstrip("/")
     folder_uid: str = os.getenv("GRAFANA_FOLDER_UID", "ddkp8uqcg5slcf")
-    base_dashboard: str = os.getenv("GRAFANA_BASE_DASHBOARD", "zabbix-vmware-esxi")
+    base_dashboard: str = os.getenv("GRAFANA_BASE_DASHBOARD", "zabbix-vmware")
     zabbix_group: str = os.getenv("GRAFANA_ZABBIX_GROUP", "Linux servers")
 
 

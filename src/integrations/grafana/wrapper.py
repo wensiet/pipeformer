@@ -67,4 +67,5 @@ class GrafanaWrapper:
                 f"{self.grafana_settings.folder_uid}/"
                 f"{self.grafana_settings.base_dashboard}?"
                 f"orgId=1&var-Group={url_encode(self.grafana_settings.zabbix_group)}"
-                f"&var-Host={compute_name}")
+                f"&var-Host={compute_name}"
+                "&from=now-30m&to=now-1m&refresh=30s")
