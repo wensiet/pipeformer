@@ -1,72 +1,75 @@
+# You can override the included template(s) by including variable overrides
+# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/pipeline/#customization
+# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
+# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
-  - build
-  - validate
-  - provision
-  - post-scripts
-
+- build
+- validate
+- provision
+- post-scripts
+- test
 variables:
-  IMAGE_NAME: "registry.gitlab.com/pipeform/pipeformer"
-
-
+  IMAGE_NAME: registry.gitlab.com/pipeform/pipeformer
 build-on-code-change:
   stage: build
   image: docker:dind
   services:
-    - docker:dind
+  - docker:dind
   only:
     changes:
-      - src/**/*
-      - pyproject.toml
-      - poetry.lock
-      - Dockerfile
-      - .gitlab-ci.yml
+    - src/**/*
+    - pyproject.toml
+    - poetry.lock
+    - Dockerfile
+    - ".gitlab-ci.yml"
     refs:
-      - main
+    - main
   script:
-    - docker info
-    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
-    - export VERSION_TAG=$(if [ "$CI_COMMIT_TAG" != "" ]; then echo "$CI_COMMIT_TAG"; else echo "$CI_COMMIT_REF_NAME-${CI_COMMIT_SHORT_SHA}"; fi)
-    - docker build -t $IMAGE_NAME:$VERSION_TAG -t $IMAGE_NAME:latest .
-    - docker push $IMAGE_NAME:$VERSION_TAG
-    - docker push $IMAGE_NAME:latest
-
+  - docker info
+  - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+  - export VERSION_TAG=$(if [ "$CI_COMMIT_TAG" != "" ]; then echo "$CI_COMMIT_TAG";
+    else echo "$CI_COMMIT_REF_NAME-${CI_COMMIT_SHORT_SHA}"; fi)
+  - docker build -t $IMAGE_NAME:$VERSION_TAG -t $IMAGE_NAME:latest .
+  - docker push $IMAGE_NAME:$VERSION_TAG
+  - docker push $IMAGE_NAME:latest
 validate-configuration:
-  image: $IMAGE_NAME:latest
+  image: "$IMAGE_NAME:latest"
   stage: validate
   only:
     changes:
-      - compute/**/*
+    - compute/**/*
   script:
-    - if [ "$CI_COMMIT_BEFORE_SHA" = "0000000000000000000000000000000000000000" ]; then
-      OLD_SHA=$(git rev-parse HEAD^);
-      else
-      OLD_SHA=$CI_COMMIT_BEFORE_SHA;
-      fi;
-    - python cli.py --old-sha $CI_COMMIT_SHA --new-sha $OLD_SHA validate
-
-
+  - if [ "$CI_COMMIT_BEFORE_SHA" = "0000000000000000000000000000000000000000" ]; then
+    OLD_SHA=$(git rev-parse HEAD^); else OLD_SHA=$CI_COMMIT_BEFORE_SHA; fi;
+  - python cli.py --old-sha $CI_COMMIT_SHA --new-sha $OLD_SHA validate
 provision-compute:
-  image: $IMAGE_NAME:latest
+  image: "$IMAGE_NAME:latest"
   stage: provision
   only:
     changes:
-      - compute/**/*
+    - compute/**/*
     refs:
-      - main
+    - main
   script:
-    - python cli.py --old-sha $CI_COMMIT_SHA --new-sha $CI_COMMIT_BEFORE_SHA provision
-
+  - python cli.py --old-sha $CI_COMMIT_SHA --new-sha $CI_COMMIT_BEFORE_SHA provision
 apply-playbooks:
-  image: $IMAGE_NAME:latest
+  image: "$IMAGE_NAME:latest"
   stage: post-scripts
   only:
     changes:
-      - compute/**/*
+    - compute/**/*
     refs:
-      - main
+    - main
   before_script:
-    - mkdir -p ~/.ssh
-    - echo "$SSH_SERVICE" > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
+  - mkdir -p ~/.ssh
+  - echo "$SSH_SERVICE" > ~/.ssh/id_rsa
+  - chmod 600 ~/.ssh/id_rsa
   script:
-    - python cli.py --old-sha $CI_COMMIT_SHA --new-sha $CI_COMMIT_BEFORE_SHA playbooks
+  - python cli.py --old-sha $CI_COMMIT_SHA --new-sha $CI_COMMIT_BEFORE_SHA playbooks
+sast:
+  stage: test
+include:
+- template: Security/SAST.gitlab-ci.yml
