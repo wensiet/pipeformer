@@ -1,7 +1,6 @@
 from src.services.validation.dto import ComputeConfig
 from pydantic import parse_obj_as
 import yaml
-from pydantic import ValidationError
 
 
 class ValidationService:

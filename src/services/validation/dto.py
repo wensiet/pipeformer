@@ -1,5 +1,5 @@
 from pydantic import BaseModel, HttpUrl
-from typing import List, Optional
+from typing import List
 
 
 class Flavor(BaseModel):
@@ -10,13 +10,18 @@ class Flavor(BaseModel):
     region: str
 
 
+class Var(BaseModel):
+    name: str
+    value: str
+
+
 class Playbook(BaseModel):
     name: str
     link: HttpUrl
-    vars: List[str]
+    vars: List[Var] = []
 
 
 class ComputeConfig(BaseModel):
     ssh: str
     flavor: Flavor
-    playbooks: Optional[List[Playbook]] = []
+    playbooks: List[Playbook] = []

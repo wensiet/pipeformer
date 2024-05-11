@@ -1,4 +1,3 @@
-from enum import StrEnum
 from typing import Optional, List
 
 from pydantic import BaseModel
@@ -51,11 +50,14 @@ class Preset:
 class OS:
     centos_7 = 39
     centos_8 = 73
+    centos_9 = 97
     ubuntu_18_04 = 47
     ubuntu_20_04 = 61
     ubuntu_22_04 = 79
     debian_10 = 57
     debian_11 = 67
+    debian_12 = 95
+    archlinux_2_12 = 89
 
     @classmethod
     def get_os(cls, os: str) -> int:
