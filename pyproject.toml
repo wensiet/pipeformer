@@ -15,6 +15,7 @@ sentry-sdk = "^2.0.1"
 paramiko = "^3.4.0"
 ansible = "^9.5.1"
 gitpython = "^3.1.43"
+pytest = "^8.2.0"
 
 [build-system]
 requires = ["poetry-core"]

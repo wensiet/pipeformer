@@ -1,17 +1,13 @@
 import logging
-import os
-
 import httpx
+
+from src.settings import ZabbixSettings
 
 
 class ZabbixWrapper:
     def __init__(self):
-        zabbix_host = os.getenv("ZABBIX_HOST")
-        zabbix_port = os.getenv("ZABBIX_PORT", "8080")
-        zabbix_schema = os.getenv("ZABBIX_SCHEMA", "http")
-        self.endpoint = f"{zabbix_schema}://{zabbix_host}:{zabbix_port}/api_jsonrpc.php"
-        self.user = os.getenv("ZABBIX_USER")
-        self.password = os.getenv("ZABBIX_PASSWORD")
+        self.zabbix_settings = ZabbixSettings()
+        self.endpoint = f"{self.zabbix_settings.host}/api_jsonrpc.php"
         self._client = httpx.Client()
 
     def _authorized_request(self, method, endpoint, body=None):
@@ -19,15 +15,15 @@ class ZabbixWrapper:
             "jsonrpc": "2.0",
             "method": "user.login",
             "params": {
-                "username": self.user,
-                "password": self.password
+                "username": self.zabbix_settings.user,
+                "password": self.zabbix_settings.password
             },
             "id": 1
         }
         response = self._client.request(
-            "POST",
-            url=self.endpoint,
-            json=auth_payload
+                "POST",
+                url=self.endpoint,
+                json=auth_payload
         )
         response.raise_for_status()
         auth_results = response.json()
@@ -38,9 +34,9 @@ class ZabbixWrapper:
         auth_token = auth_results['result']
         body["auth"] = auth_token
         return self._client.request(
-            method,
-            url=endpoint,
-            json=body
+                method,
+                url=endpoint,
+                json=body
         )
 
     def connect_host(self, host: str, name: str):

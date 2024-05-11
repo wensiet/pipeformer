@@ -5,7 +5,8 @@ import yaml
 
 class ValidationService:
 
-    def get_config_from(self, file_data) -> ComputeConfig:
+    @staticmethod
+    def get_config_from(file_data) -> ComputeConfig:
         yaml_data = yaml.safe_load(file_data)
-        config = parse_obj_as(ComputeConfig, yaml_data)
+        config = ComputeConfig.model_validate(yaml_data)
         return config

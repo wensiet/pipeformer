@@ -24,3 +24,9 @@ class VaultSettings:
     host: str = os.getenv("VAULT_HOST", "https://vault.levelware.ru")
     token: str = os.getenv("VAULT_TOKEN")
     secrets_home: str = os.getenv("VAULT_SECRETS_HOME", "pipeformer").rstrip("/")
+
+
+class ZabbixSettings:
+    user: str = os.getenv("ZABBIX_USER", "Admin")
+    password: str = os.getenv("ZABBIX_PASSWORD")
+    host: str = os.getenv("ZABBIX_HOST")
