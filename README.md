@@ -6,7 +6,7 @@
 2) Create new directory in `compute`, created directory will be your project name
 3) Create `.yaml` file with the name of your compute
 4) Fill the `.yaml` file according to your needs, follow this example, verify that
-your preset is listed in [Flavors](#flavors)
+   your preset is listed in [Flavors](#flavors)
     ```yaml
    ssh: your-public-key
    
@@ -19,11 +19,15 @@ your preset is listed in [Flavors](#flavors)
    
    playbooks:
      - name: playbook1
-       link: http://google.com
+       link: https://some-playbook.com/raw
        vars: [ ]
      - name: playbook2
-       link: http://google.com
-       vars: [ ]
+       link: https://some-playbook.com/raw
+       vars: 
+         - name: var_name
+           value: 1234
+         - name: secret_name
+           value: "vault@path/to/secret.secret_name"
    ```
 5) Create merge request to the `main` branch of the parent repository and wait for approval
 6) After approve you will see the pipeline, that will create the compute
@@ -39,16 +43,12 @@ your preset is listed in [Flavors](#flavors)
 
 ### Software configurations
 
-| OS           |
-|--------------| 
-| ubuntu_22_04 |
-| centos_7     |
-| centos_8     | 
-| ubuntu_18_04 | 
-| ubuntu_20_04 | 
-| ubuntu_22_04 |
-| debian_10    |
-| debian_11    |
+| OS        | Keyword (with version)                   |
+|-----------|------------------------------------------| 
+| CentOS    | centos_7, centos_8, centos_9             |
+| Ubuntu    | ubuntu_18_04, ubuntu_20_04, ubuntu_22_04 |
+| Debian    | debian_10, debian_11, debian_12          |
+| Archlinux | archlinux_2_12                           |
 
 ### Hardware configurations
 
@@ -59,7 +59,6 @@ your preset is listed in [Flavors](#flavors)
 | 2   | 2GB | 40GB | SPB-1 / MSK-1 |
 | 2   | 4GB | 50GB | SPB-1 / MSK-1 |
 | 4   | 8GB | 80GB | SPB-1 / MSK-1 |
-
 
 # Development
 

@@ -18,3 +18,9 @@ class AppSettings:
     sentry_dsn: str = ("https://glet_a6255ea99a8f3cda886bf26f323331b8"
                        "@observe.gitlab.com:443/errortracking/api/v1/projects/56957331")
     service_key: str = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBhC2d1n+G8MgiscLGY7DGGe0fASTiwCBApG2z1xYT6r service"
+
+
+class VaultSettings:
+    host: str = os.getenv("VAULT_HOST", "https://vault.levelware.ru")
+    token: str = os.getenv("VAULT_TOKEN")
+    secrets_home: str = os.getenv("VAULT_SECRETS_HOME", "pipeformer").rstrip("/")

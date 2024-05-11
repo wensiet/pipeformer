@@ -61,7 +61,7 @@ def validate(ctx):
     with open(ctx.obj["filename"], 'r') as file:
         file_data = file.read()
         validation.get_config_from(file_data)
-        click.echo(f"File {ctx.obj["filename"]} is valid")
+        click.echo(f"File {ctx.obj['filename']} is valid")
 
 
 @cli.command(name='provision')
