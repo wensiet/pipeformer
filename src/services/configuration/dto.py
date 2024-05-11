@@ -41,7 +41,7 @@ class PlaybookRunnable(BaseModel):
 
         var_list_dict = {}
         for elem in var_list:
-            if elem.value.startswith("vault@"):
+            if isinstance(elem.value, str) and elem.value.startswith("vault@"):
                 var_list_dict[elem.name] = extractor.get_secret(elem.value)
             else:
                 var_list_dict[elem.name] = elem.value

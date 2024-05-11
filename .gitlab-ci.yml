@@ -1,5 +1,7 @@
 stages:
   - build
+  - test
+  - release
   - validate
   - provision
   - post-scripts
@@ -16,6 +18,40 @@ build-on-code-change:
   only:
     changes:
       - src/**/*
+      - tests/**/*
+      - pyproject.toml
+      - poetry.lock
+      - Dockerfile
+      - .gitlab-ci.yml
+  script:
+    - docker info
+    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+    - docker build -t $IMAGE_NAME:$CI_COMMIT_SHORT_SHA .
+    - docker push $IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+
+run-unit-test:
+  image: $IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+  stage: test
+  only:
+    changes:
+      - src/**/*
+      - tests/**/*
+      - pyproject.toml
+      - poetry.lock
+      - Dockerfile
+      - .gitlab-ci.yml
+  script:
+    - python -m pytest
+
+release:
+  stage: release
+  image: docker:dind
+  services:
+    - docker:dind
+  only:
+    changes:
+      - src/**/*
+      - tests/**/*
       - pyproject.toml
       - poetry.lock
       - Dockerfile
@@ -25,9 +61,7 @@ build-on-code-change:
   script:
     - docker info
     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
-    - export VERSION_TAG=$(if [ "$CI_COMMIT_TAG" != "" ]; then echo "$CI_COMMIT_TAG"; else echo "$CI_COMMIT_REF_NAME-${CI_COMMIT_SHORT_SHA}"; fi)
-    - docker build -t $IMAGE_NAME:$VERSION_TAG -t $IMAGE_NAME:latest .
-    - docker push $IMAGE_NAME:$VERSION_TAG
+    - docker tag $IMAGE_NAME:$CI_COMMIT_SHORT_SHA $IMAGE_NAME:latest
     - docker push $IMAGE_NAME:latest
 
 validate-configuration:
