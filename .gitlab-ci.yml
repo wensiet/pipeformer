@@ -47,15 +47,13 @@ release:
   services:
     - docker:dind
   rules:
-    - changes:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      changes:
         - src/**/*
         - tests/**/*
         - Dockerfile
         - .gitlab-ci.yml
         - requirements.txt
-  only:
-    refs:
-      - main
   script:
     - docker info
     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
@@ -82,11 +80,9 @@ provision-compute:
   image: $IMAGE_NAME:latest
   stage: provision
   rules:
-    - changes:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      changes:
         - compute/**/*
-  only:
-    refs:
-      - main
   script:
     - python cli.py --old-sha $CI_COMMIT_SHA --new-sha $CI_COMMIT_BEFORE_SHA provision
 
@@ -94,11 +90,9 @@ apply-playbooks:
   image: $IMAGE_NAME:latest
   stage: post-scripts
   rules:
-    - changes:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      changes:
         - compute/**/*
-  only:
-    refs:
-      - main
   before_script:
     - mkdir -p ~/.ssh
     - echo "$SSH_SERVICE" > ~/.ssh/id_rsa
