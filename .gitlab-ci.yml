@@ -17,11 +17,12 @@ build-on-code-change:
     - docker:dind
   rules:
     - changes:
-        - src/**/*
-        - tests/**/*
-        - Dockerfile
-        - .gitlab-ci.yml
-        - requirements.txt
+        compare_to: 'refs/heads/main'
+        paths:
+          - src/**/*
+          - tests/**/*
+          - Dockerfile
+          - requirements.txt
   script:
     - docker info
     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
@@ -33,11 +34,12 @@ run-unit-test:
   stage: test
   rules:
     - changes:
-        - src/**/*
-        - tests/**/*
-        - Dockerfile
-        - .gitlab-ci.yml
-        - requirements.txt
+        compare_to: 'refs/heads/main'
+        paths:
+          - src/**/*
+          - tests/**/*
+          - Dockerfile
+          - requirements.txt
   script:
     - python -m pytest
 
@@ -49,11 +51,12 @@ release:
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
-        - src/**/*
-        - tests/**/*
-        - Dockerfile
-        - .gitlab-ci.yml
-        - requirements.txt
+        compare_to: 'refs/heads/main'
+        paths:
+          - src/**/*
+          - tests/**/*
+          - Dockerfile
+          - requirements.txt
   script:
     - docker info
     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
