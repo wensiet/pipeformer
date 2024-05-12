@@ -31,7 +31,12 @@
    ```
 5) Create merge request to the `main` branch of the parent repository and wait for approval
 6) After approve you will see the pipeline, that will create the compute
-7) After the pipeline is finished, you will see your compute information in pipelien logs
+7) After the pipeline is finished, you will see your compute information in pipeline logs
+8) Grafana dashboard to see your VM system info: https://grafana.levelware.ru/  
+  login: visitor 
+  password: visitor
+9) Vault secrets: https://vault.levelware.ru/
+  Ask @egor-salnikov for credentials
 
 ## How to delete compute?
 
