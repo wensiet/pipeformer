@@ -53,6 +53,7 @@ release:
         - Dockerfile
         - .gitlab-ci.yml
         - requirements.txt
+      when: on_success
     - if: $CI_COMMIT_BRANCH == "main"
   script:
     - docker info
@@ -82,6 +83,7 @@ provision-compute:
   rules:
     - changes:
         - compute/**/*
+      when: on_success
     - if: $CI_COMMIT_BRANCH == "main"
   script:
     - python cli.py --old-sha $CI_COMMIT_SHA --new-sha $CI_COMMIT_BEFORE_SHA provision
@@ -92,6 +94,7 @@ apply-playbooks:
   rules:
     - changes:
         - compute/**/*
+      when: on_success
     - if: $CI_COMMIT_BRANCH == "main"
   before_script:
     - mkdir -p ~/.ssh
