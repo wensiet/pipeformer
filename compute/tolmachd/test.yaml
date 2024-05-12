@@ -1,0 +1,15 @@
+ssh: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQD5p3TBRyyExkKIcaOHW6VN9DhNxPSTVoBBi0okRb6YXvoHDC03HSZ13m90Q6V/uHHorLcpbejTcMMGYwRrCC4bM6DJchqZZJraViNBsUzo5nGa4+UsevU+nsFAAEZS52ntEyrxt96RjTJB9O8GDXkk8jrboRc/2Jeml9M3KeM/wGqfji4JAjuXQWQDUCGM3bV4CULUhw4mYsJD5xrq6C0Ect4voodZMds4v1P9ZQBfSsEttqMDDpIdvBF4j+6TXfrurz7tb0pbAyzl4v/y+0Mea7KH5rrQxbv6DG2yYlFQgXvzQYLCb7ndydIoq5H7lDun2hBVpyQmg+V/amtEaGYS9I1rf3FRo7aWTKzNCagbJdRsFpXQfVZ4VES60zQsZDPn87uc0KT/QF2UU1FNsqNeDaiiz3GMOs2jUjINK4AW2FfbHxvsX/HLjScS+EUtwU9JUuuWff4p5CxndQyum4Upt0bRnOOWxn++gh1DFvtwZ7OPVyKkVcU1lt96dL0IZQM= kali@kali
+flavor:
+  operating_system: ubuntu_22_04
+  disk_space: 15GB
+  cpu_cores: 1
+  RAM: 1GB
+  region: SPB-1
+playbooks:
+  - name: Update apt
+    link: https://raw.githubusercontent.com/wensiet/automata/main/playbooks/packages/update_apt.yaml
+    vars: [ ]
+  - name: Install Docker
+    link: https://raw.githubusercontent.com/wensiet/automata/main/playbooks/packages/install_docker.yaml
+    vars: [ ]
+
