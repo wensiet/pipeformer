@@ -89,11 +89,9 @@ provision-compute:
 apply-playbooks:
   image: $IMAGE_NAME:latest
   stage: post-scripts
-  only:
-    changes:
-      - compute/**/*
-    refs:
-      - main
+  rules:
+    - changes:
+        - compute/**/*
   before_script:
     - mkdir -p ~/.ssh
     - echo "$SSH_SERVICE" > ~/.ssh/id_rsa
