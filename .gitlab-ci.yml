@@ -92,6 +92,7 @@ apply-playbooks:
   rules:
     - changes:
         - compute/**/*
+    - if: $CI_COMMIT_BRANCH == "main"
   before_script:
     - mkdir -p ~/.ssh
     - echo "$SSH_SERVICE" > ~/.ssh/id_rsa
